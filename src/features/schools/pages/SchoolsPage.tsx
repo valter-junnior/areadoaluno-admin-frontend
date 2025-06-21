@@ -3,9 +3,11 @@ import { AppModal } from "@/components/custom/AppModal";
 import { AppDashboardLayout } from "@/components/layout/AppDashboardLayout";
 import { useRef, useState } from "react";
 import { SchoolsForm } from "../components/SchoolsForm";
+import { AppDeleteModal } from "@/components/custom/AppDeleteModal";
 
 export const SchoolsPage = () => {
   const [formOpen, setFormOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [payload, setPayload] = useState<any>({});
   const appDataTableFetch = useRef<any>(null);
 
@@ -31,7 +33,10 @@ export const SchoolsPage = () => {
           setPayload(row);
           toggleForm();
         }}
-        onDelete={() => {}}
+        onDelete={(row) => {
+          setPayload(row);
+          setDeleteModalOpen(true);
+        }}
         actions={[
           {
             label: "Gerenciar",
@@ -43,6 +48,11 @@ export const SchoolsPage = () => {
             onClick: () => {},
             variant: "default",
           },
+          {
+            label: "Bloquear",
+            onClick: () => {},
+            variant: "default",
+          }
         ]}
         columns={[
           { label: "ID", key: "id" },
@@ -58,6 +68,18 @@ export const SchoolsPage = () => {
           refreshAppDataTableFetch();
         }} />
       </AppModal>
+
+      <AppDeleteModal
+        endpoint="/schools"
+        id={payload.id}
+        label="escola"
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+        onSuccess={() => {
+          refreshAppDataTableFetch();
+        }}
+      />
+
     </AppDashboardLayout>
   );
 };
