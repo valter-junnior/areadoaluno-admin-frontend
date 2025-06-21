@@ -118,3 +118,34 @@
     @apply bg-background text-foreground;
   }
 }
+
+.scroll-slim::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-slim::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.4);
+  border-radius: 4px;
+}
+
+.scroll-slim::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 116, 139, 0.6);
+}
+
+/* Remove as setas */
+.scroll-slim::-webkit-scrollbar-button {
+  display: none !important;
+  visibility: hidden;
+  height: 0;
+  width: 0;
+}
+
+/* Firefox */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.4) transparent;
+}

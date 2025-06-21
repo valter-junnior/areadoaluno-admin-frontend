@@ -26,16 +26,19 @@ export const SchoolsForm = ({ payload, onSuccess } :  {
           name: "logo",
           label: "Logo",
           type: "image",
+          colSpan: "1",
         },
         {
           name: "mini_logo",
           label: "Mini Logo",
           type: "image",
+          colSpan: "1",
         },
         {
-          name: "Tipo de video",
+          name: "video_type",
           label: "Tipo de video",
           type: "radio",
+          className: "flex",
           options: [
             { label: "YouTube", value: "youtube" },
             { label: "Panda", value: "panda" },

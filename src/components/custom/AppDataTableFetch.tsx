@@ -25,9 +25,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Loader2, EllipsisVertical, Plus } from "lucide-react";
+import { Loader2, EllipsisVertical, Plus, Filter } from "lucide-react";
 import { getResourceService } from "@/app/services/apiService";
+import { forwardRef, useImperativeHandle } from "react";
 
 export type ColumnConfig = {
   label: string;
@@ -52,21 +52,24 @@ type AppDataTableFetchProps = {
   onAdd?: () => void;
 };
 
-export function AppDataTableFetch({
-  endpoint,
-  columns,
-  onEdit,
-  onDelete,
-  actions = [],
-  resourceKey,
-  onAdd,
-}: AppDataTableFetchProps) {
+export const AppDataTableFetch = forwardRef(function AppDataTableFetch(
+  {
+    endpoint,
+    columns,
+    onEdit,
+    onDelete,
+    actions = [],
+    resourceKey,
+    onAdd,
+  }: AppDataTableFetchProps,
+  ref
+) {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<any[]>([]);
   const [meta, setMeta] = useState<any>({});
   const [filter, setFilter] = useState("");
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: [endpoint, page, filter],
     queryFn: async () => {
       return await getResourceService(endpoint, { page, search: filter });
@@ -80,6 +83,12 @@ export function AppDataTableFetch({
     setItems(data?.[resourceKey] || []);
     setMeta(data?.meta || {});
   }, [data, resourceKey]);
+
+  useImperativeHandle(ref, () => ({
+    refresh: () => {
+      refetch();
+    },
+  }));
 
   const renderPagination = () => {
     const totalPages = meta.last_page || 1;
@@ -140,117 +149,129 @@ export function AppDataTableFetch({
     );
   };
 
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split(".").reduce((acc, part) => acc?.[part], obj);
+  };
+
   return (
     <div className="border rounded-md overflow-hidden">
       <div className="flex justify-between items-center p-4 gap-4 flex-col md:flex-row">
-        <Input
-          placeholder="Buscar..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="w-full md:w-1/3"
-        />
-        {onAdd && (
-          <Button onClick={onAdd} className="w-full md:w-auto">
-            <Plus className="mr-2 h-4 w-4" /> Adicionar
-          </Button>
-        )}
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {columns.map((col) => (
-              <TableHead key={col.key}>{col.label}</TableHead>
-            ))}
-            {actions.length > 0 || onEdit || onDelete ? (
-              <TableHead>Ações</TableHead>
-            ) : null}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoading ? (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length + 1}
-                className="text-center py-8"
-              >
-                <Loader2 className="mx-auto h-5 w-5 animate-spin" />
-              </TableCell>
-            </TableRow>
-          ) : items.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length + 1}
-                className="text-center py-4"
-              >
-                Nenhum dado encontrado
-              </TableCell>
-            </TableRow>
-          ) : (
-            items.map((row: any, idx: number) => (
-              <TableRow key={idx}>
-                {columns.map((col) => (
-                  <TableCell key={col.key}>
-                    {col.render ? col.render(row[col.key], row) : row[col.key]}
-                  </TableCell>
-                ))}
-                {actions.length > 0 || onEdit || onDelete ? (
-                  <TableCell className="flex gap-2">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
-                          size="icon"
-                        >
-                          <EllipsisVertical />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-32">
-                        {onEdit && (
-                          <DropdownMenuItem className="cursor-pointer" onClick={() => onEdit(row)}>
-                            Editar
-                          </DropdownMenuItem>
-                        )}
-                        {actions.map((action, i) => (
-                          <DropdownMenuItem
-                            key={i}
-                            onClick={() => action.onClick(row)}
-                            className={
-                              "cursor-pointer" +
-                              (action.variant === "destructive"
-                                ? " text-red-600 hover:bg-red-50"
-                                : "")
-                            }
-                          >
-                            {action.icon} {action.label}
-                          </DropdownMenuItem>
-                        ))}
-                        {onDelete && (
-                          <>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => onDelete(row)}
-                              className="text-red-600 hover:bg-red-50 cursor-pointer"
-                            >
-                              Excluir
-                            </DropdownMenuItem>
-                          </>
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                ) : null}
-              </TableRow>
-            ))
+        <div></div>
+        <div className="flex gap-2">
+          {onAdd && (
+            <Button onClick={onAdd} className="w-full md:w-auto">
+              <Plus className="mr-2 h-4 w-4" /> Adicionar
+            </Button>
           )}
-        </TableBody>
-      </Table>
+          
+          <Button onClick={() => {}} className="w-full md:w-auto" variant="outlineDefault">
+            <Filter className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      
+      <div className="p-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((col) => (
+                <TableHead key={col.key}>{col.label}</TableHead>
+              ))}
+              {actions.length > 0 || onEdit || onDelete ? (
+                <TableHead>Ações</TableHead>
+              ) : null}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className="text-center py-8"
+                >
+                  <Loader2 className="mx-auto h-5 w-5 animate-spin" />
+                </TableCell>
+              </TableRow>
+            ) : items.length === 0 ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length + 1}
+                  className="text-center py-4"
+                >
+                  Nenhum dado encontrado
+                </TableCell>
+              </TableRow>
+            ) : (
+              items.map((row: any, idx: number) => (
+                <TableRow key={idx}>
+                  {columns.map((col) => (
+                    <TableCell key={col.key}>
+                      {col.render
+                        ? col.render(getNestedValue(row, col.key), row)
+                        : getNestedValue(row, col.key)}
+                    </TableCell>
+                  ))}
+                  {actions.length > 0 || onEdit || onDelete ? (
+                    <TableCell className="flex gap-2">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="data-[state=open]:bg-muted text-muted-foreground flex size-8 cursor-pointer"
+                            size="icon"
+                          >
+                            <EllipsisVertical />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32">
+                          {onEdit && (
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => onEdit(row)}
+                            >
+                              Editar
+                            </DropdownMenuItem>
+                          )}
+                          {actions.map((action, i) => (
+                            <DropdownMenuItem
+                              key={i}
+                              onClick={() => action.onClick(row)}
+                              className={
+                                "cursor-pointer" +
+                                (action.variant === "destructive"
+                                  ? " text-red-600 hover:bg-red-50"
+                                  : "")
+                              }
+                            >
+                              {action.icon} {action.label}
+                            </DropdownMenuItem>
+                          ))}
+                          {onDelete && (
+                            <>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => onDelete(row)}
+                                className="text-red-600 hover:bg-red-50 cursor-pointer"
+                              >
+                                Excluir
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  ) : null}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       {meta?.last_page > 1 && (
         <div className="flex justify-end p-4">{renderPagination()}</div>
       )}
     </div>
   );
-}
+})
