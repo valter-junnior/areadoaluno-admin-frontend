@@ -6,10 +6,13 @@ import {
   putResourceService,
 } from "@/app/services/apiService";
 import RenderField from "./forms/RenderField";
+import { toast } from "sonner";
+import { ZodSchema, ZodError } from "zod";
 
 export type FieldOption = {
   label: string;
   value: string;
+  checked?: boolean;
 };
 
 export type FieldConfig = {
@@ -31,6 +34,7 @@ export type FieldConfig = {
   className?: string;
 };
 
+
 type AppFormProps = {
   endpoint: string;
   keyField?: string;
@@ -38,6 +42,7 @@ type AppFormProps = {
   payload?: Record<string, any>;
   onSuccess?: (response: any) => void;
   colSpan?: number;
+  validationSchema?: ZodSchema<any>;
 };
 
 export function AppForm({
@@ -47,6 +52,7 @@ export function AppForm({
   payload = {},
   onSuccess,
   colSpan = 2,
+  validationSchema,
 }: AppFormProps) {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -67,6 +73,7 @@ export function AppForm({
     },
     onSuccess: (res) => {
       setErrors({});
+      toast.success("Formulário enviado com sucesso!");
       onSuccess?.(res);
     },
     onError: (error: any) => {
@@ -84,8 +91,28 @@ export function AppForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate();
+
+    if (validationSchema) {
+      try {
+        validationSchema.parse(formData);
+        mutation.mutate();
+      } catch (err: any) {
+        if (err instanceof ZodError) {
+          const fieldErrors: Record<string, string[]> = {};
+          err.errors.forEach((error) => {
+            const field = error.path[0];
+            if (!fieldErrors[field]) fieldErrors[field] = [];
+            fieldErrors[field].push(error.message);
+          });
+          setErrors(fieldErrors);
+          return;
+        }
+      }
+    } else {
+      mutation.mutate();
+    }
   };
+
 
   return (
     <div className="flex flex-col max-h-[70vh] min-h-[70vh]">

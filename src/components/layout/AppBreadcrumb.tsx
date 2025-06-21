@@ -15,9 +15,8 @@ export const AppBreadcrumb = () => {
     <Breadcrumb>
       <BreadcrumbList>
         {crumbs.map((crumb, index) => (
-          <>
+          <div key={crumb.title}>
             <BreadcrumbItem
-              key={crumb.title}
               className={index < crumbs.length - 1 ? 'hidden md:block' : ''}
             >
               {index < crumbs.length - 1 && crumb.href ? (
@@ -29,7 +28,7 @@ export const AppBreadcrumb = () => {
             {index < crumbs.length - 1 && (
               <BreadcrumbSeparator className="hidden md:block" />
             )}
-          </>
+          </div>
         ))}
       </BreadcrumbList>
     </Breadcrumb>

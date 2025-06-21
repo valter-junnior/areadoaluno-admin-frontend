@@ -1,42 +1,54 @@
-import { AppForm } from "@/components/custom/AppForm";
+import { AppForm } from "@/components/custom/AppForm";  
+import { useEffect, useState } from "react";
+import { z } from "zod";
 
-export const SchoolsForm = ({ payload, onSuccess } :  {
-    payload?: any,
-    onSuccess?: () => void
+const createSchoolSchema = z.object({
+  name: z.string().min(3, "Nome muito curto").max(100),
+  domain: z.string().min(3, "Domínio inválido"),
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(6, "Mínimo 6 caracteres"),
+  logo: z.any().optional(),
+  mini_logo: z.any().optional(),
+  video_type: z.enum(["youtube", "panda", "drive"]),
+});
+
+const updateSchoolSchema = z.object({
+  name: z.string().min(3, "Nome muito curto").max(100),
+  domain: z.string().min(3, "Domínio inválido"),
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(6, "Mínimo 6 caracteres").optional(),
+  logo: z.any().optional(),
+  mini_logo: z.any().optional(),
+  video_type: z.enum(["youtube", "panda", "drive"]),
+});
+
+export const SchoolsForm = ({
+  initialData,
+  onSuccess,
+}: {
+  initialData?: any;
+  onSuccess?: () => void;
 }) => {
+  const isEdit = !!initialData?.id;
+  const [payload, setPayload] = useState(initialData || {
+    video_type: "youtube",
+  });
+  
+  
   return (
     <AppForm
       endpoint="/schools"
       payload={payload}
-      onSuccess={() => {
-        if(onSuccess) onSuccess();
-      }}
+      validationSchema={isEdit ? updateSchoolSchema : createSchoolSchema}
+      onSuccess={onSuccess}
       fields={[
-        {
-          name: "name",
-          label: "Nome",
-          type: "text",
-        },
-        {
-          name: "domain",
-          label: "Domínio",
-          type: "text",
-        },
-        {
-          name: "logo",
-          label: "Logo",
-          type: "image",
-          colSpan: "1",
-        },
-        {
-          name: "mini_logo",
-          label: "Mini Logo",
-          type: "image",
-          colSpan: "1",
-        },
+        { name: "name", label: "Nome", type: "text" },
+        { name: "domain", label: "Domínio", type: "text" },
+        { name: "logo", label: "Logo", type: "image", colSpan: "1" },
+        { name: "mini_logo", label: "Mini Logo", type: "image", colSpan: "1" },
         {
           name: "video_type",
-          label: "Tipo de video",
+          label: "Tipo de vídeo",
           type: "radio",
           className: "flex",
           options: [
@@ -45,17 +57,10 @@ export const SchoolsForm = ({ payload, onSuccess } :  {
             { label: "Drive", value: "drive" },
           ],
         },
-        {
-          name: "email",
-          label: "Email",
-          type: "email",
-        },
-        {
-          name: "password",
-          label: "Senha",
-          type: "password",
-        },
+        { name: "email", label: "Email", type: "email" },
+        { name: "password", label: "Senha", type: "password" },
       ]}
     />
   );
 };
+

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { deleteResourceService } from "@/app/services/apiService";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { useState } from "react";
+import { toast } from "sonner";
 
 type AppDeleteModalProps = {
   endpoint: string;
@@ -28,11 +28,12 @@ export function AppDeleteModal({
     },
     onSuccess: () => {
       onOpenChange(false);
+      toast.success(`${label} excluído com sucesso.`);
       onSuccess?.();
     },
     onError: (error: any) => {
       console.error("Erro ao excluir:", error);
-      // Você pode exibir toasts aqui
+      toast.error(`Erro ao excluir ${label}.`);
     },
   });
 
@@ -47,7 +48,7 @@ export function AppDeleteModal({
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)} disabled={mutation.isPending}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={mutation.isPending}>
             Cancelar
           </Button>
           <Button variant="destructive" onClick={() => mutation.mutate()} disabled={mutation.isPending}>

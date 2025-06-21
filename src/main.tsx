@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { ReactQueryProvider } from './app/config/react-query'
 import { persistor, store } from './app/store'
 import './index.css'
+import { Toaster } from 'sonner'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -13,6 +14,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <PersistGate loading={null} persistor={persistor}>
         <ReactQueryProvider>
           <App />
+          <Toaster />
         </ReactQueryProvider>
       </PersistGate>
     </Provider>
