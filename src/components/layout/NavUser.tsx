@@ -3,7 +3,6 @@ import {
   ChevronsUp,
   LogOut
 } from "lucide-react";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,16 +38,10 @@ export function NavUser() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logoutService(); // opcional se você faz algo no backend
+    logoutService();
     logout();
     navigate("/login");
   };
-
-  useEffect(() => {
-    if (!user) handleLogout();
-  }, [user]);
-
-  if (!user) return null;
 
   return (
     <SidebarMenu>
