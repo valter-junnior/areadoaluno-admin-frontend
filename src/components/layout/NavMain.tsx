@@ -23,12 +23,12 @@ export function NavMain({
   route: RouteBuilder;
   items: {
     title: string;
-    url: string;
+    path: string;
     icon?: LucideIcon;
     isOpen?: boolean;
     items?: {
       title: string;
-      url: string;
+      path: string;
     }[];
   }[];
 }) {
@@ -56,7 +56,7 @@ export function NavMain({
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild>
-                          <a href={subItem.url}>
+                          <a href={subItem.path}>
                             <span>{subItem.title}</span>
                           </a>
                         </SidebarMenuSubButton>
@@ -69,7 +69,7 @@ export function NavMain({
           ) : (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                onClick={() => route.redirect(item.url)}
+                onClick={() => route.redirect(item.path)}
                 tooltip={item.title}
                 className="cursor-pointer"
               >

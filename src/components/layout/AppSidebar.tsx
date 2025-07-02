@@ -18,11 +18,11 @@ import { NavUser } from "./NavUser";
 import { useRoute, type RouteBuilder } from "@/app/hooks/useRoute";
 
 export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  data: any
+  items: any
   route?: RouteBuilder
 }
 
-export function AppSidebar({ route, data, ...props }: AppSidebarProps) {
+export function AppSidebar({ route, items, ...props }: AppSidebarProps) {
   const defaultRoute = useRoute();
 
   return (
@@ -46,7 +46,7 @@ export function AppSidebar({ route, data, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} route={route ?? defaultRoute} />
+        <NavMain items={items} route={route ?? defaultRoute} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

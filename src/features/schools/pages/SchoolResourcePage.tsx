@@ -25,15 +25,12 @@ const updateSchoolschema = z.object({
 
 export const SchoolResourcePage = () => {
   const route = useRoute();
-  const globalEndpoint = "/schools";
-  const breadcrumbs = [{ title: "Escolas", href: "/schools" }];
-
   return (
     <AppResource
       label="Escolas"
       resourceKey="schools"
-      endpoint={globalEndpoint}
-      breadcrumbs={breadcrumbs}
+      endpoint={"/schools"}
+      breadcrumbs={[{ title: "Escolas", href: "/schools" }]}
       actions={[
         {
           label: "Gerenciar",

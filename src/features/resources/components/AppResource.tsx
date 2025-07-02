@@ -1,6 +1,6 @@
 import { AppDataTableFetch } from "@/components/custom/AppDataTableFetch";
 import { AppModal } from "@/components/custom/AppModal";
-import { AppDashboardSchoolLayout } from "@/components/layout/AppDashboardSchoolLayout";
+import { AppDashboardLayout } from "@/components/layout/AppDashboardLayout";
 import { useRef, useState } from "react";
 import { AppDeleteModal } from "@/components/custom/AppDeleteModal";
 import { AppForm } from "@/components/custom/AppForm";
@@ -8,6 +8,7 @@ import { AppForm } from "@/components/custom/AppForm";
 export const AppResource = ({
   label,
   breadcrumbs,
+  withSchool = false,
   endpoint,
   resourceKey,
   actions,
@@ -18,6 +19,7 @@ export const AppResource = ({
 }: {
   label: string;
   breadcrumbs: any;
+  withSchool?: boolean;
   endpoint: string;
   resourceKey: string;
   actions: any;
@@ -40,7 +42,7 @@ export const AppResource = ({
   };
 
   return (
-    <AppDashboardSchoolLayout breadcrumbs={breadcrumbs}>
+    <AppDashboardLayout sidebarMenu={withSchool ? "school" : "admin" } breadcrumbs={breadcrumbs}>
       <AppDataTableFetch
         ref={appDataTableFetch}
         endpoint={endpoint}
@@ -70,9 +72,7 @@ export const AppResource = ({
         <AppForm
           endpoint={endpoint}
           payload={payload}
-          validationSchema={
-            payload?.id ? updateSchema : createSchema
-          }
+          validationSchema={payload?.id ? updateSchema : createSchema}
           onSuccess={() => {
             toggleForm();
             refreshAppDataTableFetch();
@@ -91,6 +91,6 @@ export const AppResource = ({
           refreshAppDataTableFetch();
         }}
       />
-    </AppDashboardSchoolLayout>
+    </AppDashboardLayout>
   );
 };

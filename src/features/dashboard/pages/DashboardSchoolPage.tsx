@@ -1,8 +1,9 @@
-import { AppDashboardSchoolLayout } from "@/components/layout/AppDashboardSchoolLayout";
+import { AppDashboardLayout } from "@/components/layout/AppDashboardLayout";
 
 export const DashboardSchoolPage = () => {
   return (
-    <AppDashboardSchoolLayout
+    <AppDashboardLayout
+      sidebarMenu="school"
       breadcrumbs={[{ title: "Dashboard", href: "/dashboard" }]}
     >
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -11,6 +12,6 @@ export const DashboardSchoolPage = () => {
         <div className="bg-muted/50 aspect-video rounded-xl" />
       </div>
       <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-    </AppDashboardSchoolLayout>
+    </AppDashboardLayout>
   );
 };

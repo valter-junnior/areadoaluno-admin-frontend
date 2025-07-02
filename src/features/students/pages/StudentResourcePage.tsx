@@ -24,17 +24,14 @@ const updateStudentschema = z.object({
 
 export const StudentResourcePage = () => {
   const buildSchoolEndpoint = useBuildSchoolEndpoint();
-  const globalEndpoint = buildSchoolEndpoint("/students");
-  const breadcrumbs = [
-    { title: "Alunos", href: "/students" },
-  ];
 
   return (
     <AppResource
       label="Alunos"
       resourceKey="students"
-      endpoint={globalEndpoint}
-      breadcrumbs={breadcrumbs}
+      withSchool={true}
+      endpoint={buildSchoolEndpoint("/students")}
+      breadcrumbs={[{ title: "Alunos", href: "/students" }]}
       actions={[
         {
           label: "Bloquear",

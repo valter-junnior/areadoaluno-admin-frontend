@@ -9,14 +9,16 @@ import { AppBreadcrumb } from "./AppBreadcrumb";
 import { useBreadcrumb } from "@/app/providers/breadcrumb/useBreadcrumb";
 import { useEffect } from "react";
 
-import { GraduationCap, SquareTerminal } from "lucide-react";
+import { routes } from "@/app/config/routes";
 
 export const AppDashboardLayout = ({
   breadcrumbs,
   children,
+  sidebarMenu = "admin"
 }: {
   children: React.ReactNode;
   breadcrumbs: { title: string; href: string }[];
+  sidebarMenu?: "admin" | "school";
 }) => {
   const breadcrumb = useBreadcrumb();
 
@@ -26,21 +28,7 @@ export const AppDashboardLayout = ({
 
   return (
     <SidebarProvider>
-      <AppSidebar 
-        data={{
-          navMain: [
-            {
-              title: "Dashboard",
-              url: "/dashboard",
-              icon: SquareTerminal,
-            },
-            {
-              title: "Escolas",
-              url: "/escolas",
-              icon: GraduationCap,
-            },
-          ],
-        }} />
+      <AppSidebar items={ Object.values(routes?.[sidebarMenu])} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
