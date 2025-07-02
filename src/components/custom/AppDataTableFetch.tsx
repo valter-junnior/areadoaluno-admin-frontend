@@ -76,6 +76,7 @@ export const AppDataTableFetch = forwardRef(function AppDataTableFetch(
     },
     staleTime: 1000,
     gcTime: 5 * 60 * 1000,
+    retry: 3,
     placeholderData: (prev) => prev,
   });
 

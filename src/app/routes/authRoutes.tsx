@@ -1,6 +1,8 @@
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
-import { SchoolsPage } from "@/features/schools/pages/SchoolsPage";
+import { DashboardSchoolPage } from "@/features/dashboard/pages/DashboardSchoolPage";
+import { SchoolResourcePage } from "@/features/schools/pages/SchoolResourcePage";
+import { StudentResourcePage } from "@/features/students/pages/StudentResourcePage";
 import { Navigate } from "react-router-dom";
 import { type RouteObject } from "react-router-dom";
 
@@ -18,8 +20,25 @@ export const authRoutes: RouteObject[] = [
       },
       {
         path: "/escolas",
-        element: <SchoolsPage />,
+        element: <SchoolResourcePage />,
+      },{
+
+        path: "/:school",
+        children: [
+          {
+            index: true,
+            element: <DashboardSchoolPage />,
+          },
+          {
+            path: "alunos",
+            element: <StudentResourcePage />,
+          },
+        ],
       },
+      {
+        path: "*",
+        element: <Navigate to="/" />,
+      }
     ],
   },
 ];

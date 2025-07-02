@@ -14,11 +14,13 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useNavigate } from "react-router-dom";
+import type { RouteBuilder } from "@/app/hooks/useRoute";
 
 export function NavMain({
   items,
+  route
 }: {
+  route: RouteBuilder;
   items: {
     title: string;
     url: string;
@@ -30,7 +32,6 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const navigate = useNavigate();
   return (
     <SidebarGroup>
       <SidebarMenu>
@@ -68,7 +69,7 @@ export function NavMain({
           ) : (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                onClick={() => navigate(item.url)}
+                onClick={() => route.redirect(item.url)}
                 tooltip={item.title}
                 className="cursor-pointer"
               >

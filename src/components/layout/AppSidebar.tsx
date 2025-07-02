@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   GraduationCap,
-  SquareTerminal,
 } from "lucide-react";
 
 import {
@@ -16,25 +15,15 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./NavMain";
 import { NavUser } from "./NavUser";
-import { useNavigate } from "react-router-dom";
+import { useRoute, type RouteBuilder } from "@/app/hooks/useRoute";
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: SquareTerminal,
-    },
-    {
-      title: "Escolas",
-      url: "/escolas",
-      icon: GraduationCap,
-    }
-  ],
-};
+export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  data: any
+  route?: RouteBuilder
+}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const navigate = useNavigate();
+export function AppSidebar({ route, data, ...props }: AppSidebarProps) {
+  const defaultRoute = useRoute();
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -44,7 +33,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              onClick={() => navigate("/")}
+              onClick={() => route ? route.redirect("/") : defaultRoute.redirect("/") }
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <GraduationCap className="size-4" />
@@ -57,7 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} route={route ?? defaultRoute} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

@@ -10,37 +10,41 @@ import { useBreadcrumb } from "@/app/providers/breadcrumb/useBreadcrumb";
 import { useEffect } from "react";
 
 import { GraduationCap, SquareTerminal } from "lucide-react";
+import { useRoute } from "@/app/hooks/useRoute";
 
-export const AppDashboardLayout = ({
+export const AppDashboardSchoolLayout = ({
   breadcrumbs,
   children,
 }: {
   children: React.ReactNode;
   breadcrumbs: { title: string; href: string }[];
 }) => {
+  const route = useRoute();
   const breadcrumb = useBreadcrumb();
 
   useEffect(() => {
     breadcrumb.setCrumbs(breadcrumbs);
-  }, [])
+  }, []);
 
   return (
     <SidebarProvider>
-      <AppSidebar 
+      <AppSidebar
         data={{
           navMain: [
             {
               title: "Dashboard",
-              url: "/dashboard",
+              url: "/",
               icon: SquareTerminal,
             },
             {
-              title: "Escolas",
-              url: "/escolas",
+              title: "Alunos",
+              url: "/alunos",
               icon: GraduationCap,
             },
           ],
-        }} />
+        }}
+        route={route.withSchool()}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -49,8 +53,8 @@ export const AppDashboardLayout = ({
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            </div>
-            <AppBreadcrumb />
+          </div>
+          <AppBreadcrumb />
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
       </SidebarInset>

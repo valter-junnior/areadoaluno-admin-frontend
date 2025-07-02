@@ -1,8 +1,8 @@
-import { AppForm } from "@/components/custom/AppForm";  
-import { useEffect, useState } from "react";
+import { useBuildSchoolEndpoint } from "@/app/hooks/useBuildSchoolEndpoint ";
+import { AppResource } from "@/features/resources/components/AppResource";
 import { z } from "zod";
 
-const createSchoolSchema = z.object({
+const createStudentschema = z.object({
   name: z.string().min(3, "Nome muito curto").max(100),
   domain: z.string().min(3, "Domínio inválido"),
   email: z.string().email("E-mail inválido"),
@@ -12,7 +12,7 @@ const createSchoolSchema = z.object({
   video_type: z.enum(["youtube", "panda", "drive"]),
 });
 
-const updateSchoolSchema = z.object({
+const updateStudentschema = z.object({
   name: z.string().min(3, "Nome muito curto").max(100),
   domain: z.string().min(3, "Domínio inválido"),
   email: z.string().email("E-mail inválido"),
@@ -22,25 +22,32 @@ const updateSchoolSchema = z.object({
   video_type: z.enum(["youtube", "panda", "drive"]),
 });
 
-export const SchoolsForm = ({
-  initialData,
-  onSuccess,
-}: {
-  initialData?: any;
-  onSuccess?: () => void;
-}) => {
-  const isEdit = !!initialData?.id;
-  const [payload, setPayload] = useState(initialData || {
-    video_type: "youtube",
-  });
-  
-  
+export const StudentResourcePage = () => {
+  const buildSchoolEndpoint = useBuildSchoolEndpoint();
+  const globalEndpoint = buildSchoolEndpoint("/students");
+  const breadcrumbs = [
+    { title: "Alunos", href: "/students" },
+  ];
+
   return (
-    <AppForm
-      endpoint="/schools"
-      payload={payload}
-      validationSchema={isEdit ? updateSchoolSchema : createSchoolSchema}
-      onSuccess={onSuccess}
+    <AppResource
+      label="Alunos"
+      resourceKey="students"
+      endpoint={globalEndpoint}
+      breadcrumbs={breadcrumbs}
+      actions={[
+        {
+          label: "Bloquear",
+          onClick: () => {},
+          variant: "default",
+        },
+      ]}
+      columns={[
+        { label: "ID", key: "id" },
+        { label: "Nome", key: "name" },
+      ]}
+      updateSchema={updateStudentschema}
+      createSchema={createStudentschema}
       fields={[
         { name: "name", label: "Nome", type: "text" },
         { name: "domain", label: "Domínio", type: "text" },
@@ -63,4 +70,3 @@ export const SchoolsForm = ({
     />
   );
 };
-
