@@ -19,10 +19,20 @@ export const routes = {
         title: "Dashboard",
         icon: SquareTerminal,
     },
-    schools : {
+    students : {
         path: "/alunos",
         title: "Alunos",
         icon: GraduationCap,
+    },
+    classrooms : {
+      path: "/turmas",
+      title: "Turmas",
+      icon: GraduationCap,
+    },
+    matters : {
+      path: "/turmas/:classroom/materias",
+      title: "Materias",
+      icon: GraduationCap,
     }
   }
 };

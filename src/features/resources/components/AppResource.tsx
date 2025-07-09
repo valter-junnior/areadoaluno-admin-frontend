@@ -16,17 +16,19 @@ export const AppResource = ({
   fields,
   updateSchema,
   createSchema,
+  formsConfig = {}
 }: {
   label: string;
   breadcrumbs: any;
   withSchool?: boolean;
   endpoint: string;
   resourceKey: string;
-  actions: any;
+  actions?: any;
   columns: any[];
   fields: any[];
   updateSchema: any;
   createSchema: any;
+  formsConfig?: any
 }) => {
   const [formOpen, setFormOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -48,11 +50,16 @@ export const AppResource = ({
         endpoint={endpoint}
         resourceKey={resourceKey}
         onAdd={() => {
-          setPayload({});
+          setPayload({
+            ...formsConfig?.initialData,
+          });
           toggleForm();
         }}
         onEdit={(row) => {
-          setPayload(row);
+          setPayload({
+            ...formsConfig?.initialData,
+            ...row,
+          });
           toggleForm();
         }}
         onDelete={(row) => {
@@ -67,7 +74,7 @@ export const AppResource = ({
         open={formOpen}
         onOpenChange={setFormOpen}
         title={`${payload?.id ? "Editar" : "Adicionar"} ${label}`}
-        size="lg"
+        size={ formsConfig.size || "lg" }
       >
         <AppForm
           endpoint={endpoint}
@@ -78,6 +85,7 @@ export const AppResource = ({
             refreshAppDataTableFetch();
           }}
           fields={fields}
+          colSpan={formsConfig.colSpan || 2}
         />
       </AppModal>
 

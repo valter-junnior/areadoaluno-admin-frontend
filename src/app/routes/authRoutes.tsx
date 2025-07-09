@@ -1,6 +1,8 @@
 import { ProtectedRoute } from "@/components/layout/ProtectedRoute";
+import { ClassroomResourcePage } from "@/features/classrooms/pages/ClassroomResourcePage";
 import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { DashboardSchoolPage } from "@/features/dashboard/pages/DashboardSchoolPage";
+import { MatterResourcePage } from "@/features/matters/pages/MatterResourcePage";
 import { SchoolResourcePage } from "@/features/schools/pages/SchoolResourcePage";
 import { StudentResourcePage } from "@/features/students/pages/StudentResourcePage";
 import { Navigate } from "react-router-dom";
@@ -32,6 +34,14 @@ export const authRoutes: RouteObject[] = [
           {
             path: "alunos",
             element: <StudentResourcePage />,
+          },
+          {
+            path: "turmas",
+            element: <ClassroomResourcePage />,
+          },
+          {
+            path: "turmas/:classroom/materias",
+            element: <MatterResourcePage />,
           },
         ],
       },

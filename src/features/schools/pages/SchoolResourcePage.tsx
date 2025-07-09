@@ -8,8 +8,8 @@ const createSchoolschema = z.object({
   domain: z.string().min(3, "Domínio inválido"),
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
-  logo: z.any().optional(),
-  mini_logo: z.any().optional(),
+  logo: z.any().optional().nullable(),
+  mini_logo: z.any().optional().nullable(),
   video_type: z.enum(["youtube", "panda", "drive"]),
 });
 
@@ -17,9 +17,9 @@ const updateSchoolschema = z.object({
   name: z.string().min(3, "Nome muito curto").max(100),
   domain: z.string().min(3, "Domínio inválido"),
   email: z.string().email("E-mail inválido"),
-  password: z.string().min(6, "Mínimo 6 caracteres").optional(),
-  logo: z.any().optional(),
-  mini_logo: z.any().optional(),
+  password: z.string().min(6, "Mínimo 6 caracteres").optional().nullable(),
+  logo: z.any().optional().nullable(),
+  mini_logo: z.any().optional().nullable(),
   video_type: z.enum(["youtube", "panda", "drive"]),
 });
 
@@ -63,7 +63,7 @@ export const SchoolResourcePage = () => {
       columns={[
         { label: "ID", key: "id" },
         { label: "Nome", key: "domain" },
-        { label: "Domínio", key: "name" },
+        { label: "Domínio", key: "name", },
         { label: "Email", key: "email" },
       ]}
       updateSchema={updateSchoolschema}

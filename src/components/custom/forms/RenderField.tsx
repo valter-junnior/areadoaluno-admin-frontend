@@ -4,9 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import clsx from "clsx";
+import { buildColSpan, buildRowSpan } from "@/app/utils/buildGrid";
 
 const RenderField = ({ field, formData, handleChange, errors }: any) => {
-  const value = formData[field.name] || "";
+  const value = formData[field.name] ?? field.default ?? "";
   const [showPassword, setShowPassword] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -22,12 +24,10 @@ const RenderField = ({ field, formData, handleChange, errors }: any) => {
   const sharedProps = {
     id: field.name,
     name: field.name,
-    value,
+    value: value,
     onChange: (e: any) => handleInputChange(e.target.value),
     placeholder: field.placeholder,
   };
-
-  const wrapperClass = `${field.colSpan || "col-span-2"} ${field.rowSpan || "row-span-2"}`;
 
   // Atualiza o preview se for um novo arquivo
   useEffect(() => {
@@ -42,8 +42,18 @@ const RenderField = ({ field, formData, handleChange, errors }: any) => {
   }, [value, field.type]);
 
   return (
-    <div key={field.name} className={`flex flex-col gap-1 ${wrapperClass}`}>
-      <Label className="mb-1" htmlFor={field.name}>{field.label}</Label>
+    <div
+      key={field.name}
+      className={clsx(
+        "flex flex-col gap-2",
+        field.className,
+        buildColSpan(field.colSpan),
+        buildRowSpan(field.rowSpan)
+      )}
+    >
+      <Label className="mb-1" htmlFor={field.name}>
+        {field.label}
+      </Label>
 
       {field.type === "textarea" ? (
         <Textarea {...sharedProps} />
@@ -70,8 +80,13 @@ const RenderField = ({ field, formData, handleChange, errors }: any) => {
         >
           {field.options.map((option: any) => (
             <div key={option.value} className="flex items-center space-x-2">
-              <RadioGroupItem value={option.value} id={`${field.name}-${option.value}`} />
-              <Label htmlFor={`${field.name}-${option.value}`}>{option.label}</Label>
+              <RadioGroupItem
+                value={option.value}
+                id={`${field.name}-${option.value}`}
+              />
+              <Label htmlFor={`${field.name}-${option.value}`}>
+                {option.label}
+              </Label>
             </div>
           ))}
         </RadioGroup>
@@ -94,6 +109,19 @@ const RenderField = ({ field, formData, handleChange, errors }: any) => {
             }}
           />
         </>
+      ) : field.type === "select" && Array.isArray(field.options) ? (
+        <select {...sharedProps} className="border rounded px-3 py-2 text-sm">
+          <option value="">Selecione</option>
+          {field.options.map((option: any) => (
+            <option key={option.value} value={option.value} selected={value === option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      ) : field.type === "element" ? (
+        <div className={clsx("flex items-center", field.className)}>
+          {field?.element}
+        </div>
       ) : (
         <Input type={field.type} {...sharedProps} />
       )}

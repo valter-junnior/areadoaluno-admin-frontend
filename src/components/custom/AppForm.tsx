@@ -8,6 +8,8 @@ import {
 import RenderField from "./forms/RenderField";
 import { toast } from "sonner";
 import { ZodSchema, ZodError } from "zod";
+import clsx from "clsx";
+import { buildGrid } from "@/app/utils/buildGrid";
 
 export type FieldOption = {
   label: string;
@@ -26,6 +28,7 @@ export type FieldConfig = {
     | "password"
     | "image"
     | "radio";
+  default?: any;
   placeholder?: string;
   onChange?: (value: any) => void;
   options?: FieldOption[];
@@ -113,13 +116,15 @@ export function AppForm({
     }
   };
 
-
   return (
-    <div className="flex flex-col max-h-[70vh] min-h-[70vh]">
+    <div className="flex flex-col max-h-[70vh]">
       <div className="overflow-y-auto scroll-slim p-4 flex-1">
         <form
           onSubmit={handleSubmit}
-          className={`grid grid-cols-${colSpan} gap-4`}
+            className={clsx(
+              "grid gap-4",
+              buildGrid(colSpan)
+            )}
         >
           {fields.map((field) => (
             <RenderField
