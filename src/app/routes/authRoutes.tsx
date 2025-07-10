@@ -14,16 +14,23 @@ export const authRoutes: RouteObject[] = [
     children: [
       {
         path: "/",
-        element: <Navigate to="/dashboard" />,
+        element: <Navigate to="/admin" />,
       },
       {
-        path: "/dashboard",
-        element: <DashboardPage />,
+
+        path: "/admin",
+        children: [
+          {
+            index: true,
+            element: <DashboardPage />,
+          },
+          {
+            path: "escolas",
+            element: <SchoolResourcePage />,
+          },
+        ],
       },
       {
-        path: "/escolas",
-        element: <SchoolResourcePage />,
-      },{
 
         path: "/:school",
         children: [

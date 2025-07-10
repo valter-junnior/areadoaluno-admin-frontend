@@ -15,14 +15,13 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./NavMain";
 import { NavUser } from "./NavUser";
-import { useRoute, type RouteBuilder } from "@/app/hooks/useRoute";
+import { useRoute } from "@/app/hooks/useRoute";
 
 export interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   items: any
-  route?: RouteBuilder
 }
 
-export function AppSidebar({ route, items, ...props }: AppSidebarProps) {
+export function AppSidebar({ items, ...props }: AppSidebarProps) {
   const defaultRoute = useRoute();
 
   return (
@@ -33,7 +32,7 @@ export function AppSidebar({ route, items, ...props }: AppSidebarProps) {
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              onClick={() => route ? route.redirect("/") : defaultRoute.redirect("/") }
+              onClick={() => defaultRoute.redirect("/") }
             >
               <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                 <GraduationCap className="size-4" />
@@ -46,7 +45,7 @@ export function AppSidebar({ route, items, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={items} route={route ?? defaultRoute} />
+        <NavMain items={items} route={defaultRoute} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

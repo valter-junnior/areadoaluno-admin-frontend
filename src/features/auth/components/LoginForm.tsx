@@ -6,13 +6,13 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useAuth } from '@/app/hooks/useAuth'
 import { loginService } from '@/app/services/authService'
-import { useNavigate } from 'react-router-dom'
+import { useRoute } from '@/app/hooks/useRoute'
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'form'>) {
-  const navigate = useNavigate()
+  const route = useRoute()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { login } = useAuth()
@@ -22,7 +22,8 @@ export function LoginForm({
     onSuccess: (response) => {
       const { access_token, user } = response.data
       login({ token: access_token, user })
-      navigate('/dashboard')
+
+      route.withSchool().redirect('/')
     },
   })
 

@@ -3,7 +3,6 @@ import {
   ChevronsUp,
   LogOut
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -23,6 +22,7 @@ import {
 
 import { useAuth } from "@/app/hooks/useAuth";
 import { logoutService } from "@/app/services/authService";
+import { useRoute } from "@/app/hooks/useRoute";
 
 function getInitials(name?: string) {
   if (!name) return "?";
@@ -35,12 +35,12 @@ function getInitials(name?: string) {
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const route = useRoute();
 
   const handleLogout = () => {
     logoutService();
     logout();
-    navigate("/login");
+    route.withSchool().redirect("/login")
   };
 
   return (

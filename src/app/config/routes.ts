@@ -29,10 +29,5 @@ export const routes = {
       title: "Turmas",
       icon: GraduationCap,
     },
-    matters : {
-      path: "/turmas/:classroom/materias",
-      title: "Materias",
-      icon: GraduationCap,
-    }
   }
 };

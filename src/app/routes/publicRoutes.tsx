@@ -6,4 +6,8 @@ export const publicRoutes: RouteObject[] = [
     path: "/login",
     element: <LoginPage />,
   },
+  {
+    path: "/:school/login",
+    element: <LoginPage />,
+  },
 ];

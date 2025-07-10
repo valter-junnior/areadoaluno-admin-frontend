@@ -17,11 +17,11 @@ export const MatterResourcePage = () => {
 
   return (
     <AppResource
-      label="Turmas"
-      resourceKey="classrooms"
+      label="Matérias"
+      resourceKey="matters"
       withSchool={true}
-      endpoint={buildSchoolEndpoint("/classrooms")}
-      breadcrumbs={[{ title: "Turmas", href: "/classrooms" }]}
+      endpoint={buildSchoolEndpoint("/matters")}
+      breadcrumbs={[{ title: "Matérias", href: "/matters" }]}
       actions={[
         {
           label: "Trabalhos",

@@ -4,16 +4,17 @@ export type RouteBuilder = {
   withSchool: (schoolOverride?: string) => RouteBuilder;
   redirect: (path: string) => void;
   get: (path: string) => string;
+  classroom: string | undefined;
 };
 
 export const useRoute = (): RouteBuilder => {
-  const { school: currentSchool } = useParams();
+  const { school: currentSchool, classroom } = useParams();
   const navigate = useNavigate();
 
   let schoolOverride: string | undefined;
 
   const resolveSchool = () => {
-    return schoolOverride ?? currentSchool ?? "";
+    return schoolOverride ?? currentSchool ?? "admin";
   };
 
   const builder: RouteBuilder = {
@@ -30,6 +31,9 @@ export const useRoute = (): RouteBuilder => {
       const school = resolveSchool();
       return school ? `/${school}${path.startsWith("/") ? "" : "/"}${path}` : path;
     },
+    get classroom() {
+      return classroom;
+    }
   };
 
   return builder;
